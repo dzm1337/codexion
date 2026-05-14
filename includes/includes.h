@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 01:43:11 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 01:43:13 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/05/14 17:02:56 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,6 @@ int						acquire_dongle(t_dongle *dongle, t_coder *coder);
 int						release_dongle(t_dongle *dongle, t_coder *coder);
 int						release_both_dongles(t_coder *coder);
 int						acquire_both_dongles(t_coder *coder);
-int						try_acquire_dongle_nonblock(t_dongle *dongle,
-							t_coder *coder);
 int						try_acquire_immediate(t_dongle *d, t_coder *c,
 							long now);
 int						wait_for_dongle(t_dongle *dongle, t_coder *coder);
@@ -101,5 +99,7 @@ void					heap_push(t_dongle *d, t_coder *c);
 t_coder					*heap_pop(t_dongle *d);
 void					*coder_routine(void *arg);
 void					*monitor_routine(void *arg);
+int						init_dongle_basic(t_dongle *dongle);
+int						init_dongle_edf_heap(t_dongle *dongle, int amount);
 
 #endif

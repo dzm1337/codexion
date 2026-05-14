@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:28:33 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 01:44:10 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/05/14 17:00:38 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	check_coder_burnout(t_data *data, int i, long now)
 {
 	if (data->coders[i].compiles_done < data->number_of_compiles_required)
 	{
-		if (now - data->coders[i].last_compile > data->time_to_burnout)
+		if (now > data->coders[i].last_compile + data->time_to_burnout)
 		{
 			log_burnout(data, data->coders[i].id);
 			broadcast_stop(data);

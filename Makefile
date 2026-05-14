@@ -6,7 +6,7 @@ RM = rm -f
 SRCS = main.c \
        src/coder_actions.c \
        src/dongle.c \
-       src/dongle_utils.c \
+       src/dongle_init_utils.c \
        src/edf_scheduler.c \
        src/fifo_scheduler.c \
        src/init.c \
@@ -14,6 +14,7 @@ SRCS = main.c \
        src/utils.c \
 			 src/wait_condition.c \
 			 src/init_threads.c \
+			 src/parser.c \
 
 OBJS = $(SRCS:.c=.o)
 

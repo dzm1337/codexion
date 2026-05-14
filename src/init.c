@@ -6,36 +6,11 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:28:14 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 00:35:51 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/05/14 03:10:50 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/includes.h"
-
-int	parse_args(t_data *data, int argc, char **argv)
-{
-	if (argc != 9)
-		return (0);
-	data->number_of_coders = atoi(argv[1]);
-	data->time_to_burnout = ft_atol(argv[2]);
-	data->time_to_compile = ft_atol(argv[3]);
-	data->time_to_debug = ft_atol(argv[4]);
-	data->time_to_refactor = ft_atol(argv[5]);
-	data->number_of_compiles_required = atoi(argv[6]);
-	data->dongle_cooldown = ft_atol(argv[7]);
-	if (strcmp(argv[8], "fifo") == 0)
-		data->scheduler = MY_FIFO;
-	else if (strcmp(argv[8], "edf") == 0)
-		data->scheduler = MY_EDF;
-	else
-		return (0);
-	if (data->number_of_coders <= 0 || data->time_to_burnout <= 0
-		|| data->time_to_compile <= 0 || data->time_to_debug <= 0
-		|| data->time_to_refactor <= 0 || data->number_of_compiles_required <= 0
-		|| data->dongle_cooldown < 0)
-		return (0);
-	return (1);
-}
 
 static int	init_dongles_and_mutex(t_data *data)
 {

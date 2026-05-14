@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:29:37 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 00:29:38 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/05/14 17:03:39 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,9 @@ t_dongle	*init_dongles_edf(int amount)
 	i = 0;
 	while (i < amount)
 	{
-		if (pthread_mutex_init(&dongles[i].mutex, NULL) != 0
-			|| pthread_cond_init(&dongles[i].cond, NULL) != 0)
+		if (!init_dongle_basic(&dongles[i])
+			|| !init_dongle_edf_heap(&dongles[i], amount))
 			return (free_dongles(dongles, i), NULL);
-		dongles[i].timestamp = 0;
-		dongles[i].available = 1;
-		dongles[i].held_by = -1;
-		dongles[i].heap = malloc(sizeof(t_coder *) * amount);
-		if (!dongles[i].heap)
-			return (free_dongles(dongles, i), NULL);
-		dongles[i].heap_size = 0;
-		dongles[i].heap_capacity = amount;
 		i++;
 	}
 	return (dongles);
