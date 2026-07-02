@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:27:52 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 00:27:53 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/07/02 22:02:10 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,29 @@ t_coder	*dequeue_coder(t_dongle *dongle)
 		dongle->wait_tail = NULL;
 	first_coder->next = NULL;
 	return (first_coder);
+}
+
+void	remove_from_queue_fifo(t_dongle *dongle, t_coder *coder)
+{
+	t_coder	*prev;
+	t_coder	*cur;
+
+	prev = NULL;
+	cur = dongle->wait_head;
+	while (cur)
+	{
+		if (cur == coder)
+		{
+			if (prev)
+				prev->next = cur->next;
+			else
+				dongle->wait_head = cur->next;
+			if (!cur->next)
+				dongle->wait_tail = prev;
+			cur->next = NULL;
+			return ;
+		}
+		prev = cur;
+		cur = cur->next;
+	}
 }

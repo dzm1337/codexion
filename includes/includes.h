@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 01:43:11 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 17:02:56 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/07/02 22:19:22 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ struct					s_coder
 {
 	int					id;
 	long				last_compile;
+	pthread_mutex_t		state_mutex;
 	volatile int		compiles_done;
 	long				deadline;
 	pthread_t			thread;
@@ -64,7 +65,8 @@ struct					s_data
 	int					number_of_compiles_required;
 	long				dongle_cooldown;
 	int					scheduler;
-	volatile int		stop;
+	int					stop;
+	pthread_mutex_t		stop_mutex;
 
 	long				start_time;
 
@@ -101,5 +103,17 @@ void					*coder_routine(void *arg);
 void					*monitor_routine(void *arg);
 int						init_dongle_basic(t_dongle *dongle);
 int						init_dongle_edf_heap(t_dongle *dongle, int amount);
+int						is_stopped(t_data *data);
+int						coder_done(t_coder *coder, t_data *data);
+void					heapify_up(t_dongle *dongle, int i);
+void					heapify_down(t_dongle *dongle, int i);
+void					remove_from_queue_fifo(t_dongle *dongle,
+							t_coder *coder);
+void					remove_from_queue_edf(t_dongle *dongle, t_coder *coder);
+void					broadcast_stop(t_data *data);
+void					add_to_queue(t_dongle *dongle, t_coder *coder);
+int						check_stop_and_relock(t_dongle *dongle, t_coder *coder);
+void					grant_dongle(t_dongle *dongle, t_coder *coder,
+							long now);
 
 #endif

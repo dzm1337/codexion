@@ -50,12 +50,9 @@ static int	assign_values(t_data *data, char **argv)
 	data->time_to_refactor = ft_atol(argv[5]);
 	data->number_of_compiles_required = atoi(argv[6]);
 	data->dongle_cooldown = ft_atol(argv[7]);
-	if (data->number_of_coders <= 0
-		|| data->time_to_burnout <= 0
-		|| data->time_to_compile <= 0
-		|| data->time_to_debug <= 0
-		|| data->time_to_refactor <= 0
-		|| data->number_of_compiles_required <= 0
+	if (data->number_of_coders <= 0 || data->time_to_burnout <= 0
+		|| data->time_to_compile <= 0 || data->time_to_debug <= 0
+		|| data->time_to_refactor <= 0 || data->number_of_compiles_required <= 0
 		|| data->dongle_cooldown < 0)
 		return (0);
 	return (1);

@@ -6,40 +6,35 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:28:00 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 00:28:01 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/07/02 22:01:40 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/includes.h"
 
-static void	swap_coders(t_coder **a, t_coder **b)
+void	heapify_up(t_dongle *dongle, int i)
 {
-	t_coder	*t;
-
-	t = *a;
-	*a = *b;
-	*b = t;
-}
-
-static void	heapify_up(t_dongle *dongle, int i)
-{
-	int	parent;
+	int		parent;
+	t_coder	*tmp;
 
 	while (i > 0)
 	{
 		parent = (i - 1) / 2;
 		if (dongle->heap[parent]->deadline <= dongle->heap[i]->deadline)
 			break ;
-		swap_coders(&dongle->heap[parent], &dongle->heap[i]);
+		tmp = dongle->heap[parent];
+		dongle->heap[parent] = dongle->heap[i];
+		dongle->heap[i] = tmp;
 		i = parent;
 	}
 }
 
-static void	heapify_down(t_dongle *dongle, int i)
+void	heapify_down(t_dongle *dongle, int i)
 {
-	int	smallest;
-	int	right;
-	int	left;
+	int		smallest;
+	int		left;
+	int		right;
+	t_coder	*tmp;
 
 	while (1)
 	{
@@ -54,7 +49,9 @@ static void	heapify_down(t_dongle *dongle, int i)
 			smallest = right;
 		if (smallest == i)
 			break ;
-		swap_coders(&dongle->heap[i], &dongle->heap[smallest]);
+		tmp = dongle->heap[i];
+		dongle->heap[i] = dongle->heap[smallest];
+		dongle->heap[smallest] = tmp;
 		i = smallest;
 	}
 }
@@ -82,4 +79,28 @@ t_coder	*heap_pop(t_dongle *dongle)
 	dongle->heap_size--;
 	heapify_down(dongle, 0);
 	return (min);
+}
+
+void	remove_from_queue_edf(t_dongle *dongle, t_coder *coder)
+{
+	int		i;
+	t_coder	*tmp;
+
+	i = 0;
+	while (i < dongle->heap_size)
+	{
+		if (dongle->heap[i] == coder)
+		{
+			tmp = dongle->heap[dongle->heap_size - 1];
+			dongle->heap[i] = tmp;
+			dongle->heap_size--;
+			if (i < dongle->heap_size)
+			{
+				heapify_down(dongle, i);
+				heapify_up(dongle, i);
+			}
+			return ;
+		}
+		i++;
+	}
 }

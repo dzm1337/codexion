@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:28:24 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 01:02:46 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/07/02 22:03:15 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,13 @@ long	get_current_time(void)
 void	log_action(t_data *data, int coder_id, const char *message)
 {
 	long	elapsed;
+	int		stopped;
 
 	pthread_mutex_lock(&data->print_mutex);
-	if (!data->stop)
+	pthread_mutex_lock(&data->stop_mutex);
+	stopped = data->stop;
+	pthread_mutex_unlock(&data->stop_mutex);
+	if (!stopped)
 	{
 		elapsed = get_current_time() - data->start_time;
 		printf("%ld %d %s\n", elapsed, coder_id, message);
@@ -73,9 +77,14 @@ long	ft_atol(const char *s)
 void	log_burnout(t_data *data, int id)
 {
 	long	now;
+	int		stopped;
 
 	now = get_current_time();
 	pthread_mutex_lock(&data->print_mutex);
-	printf("%ld %d burned out\n", now - data->start_time, id);
+	pthread_mutex_lock(&data->stop_mutex);
+	stopped = data->stop;
+	pthread_mutex_unlock(&data->stop_mutex);
+	if (!stopped)
+		printf("%ld %d burned out\n", now - data->start_time, id);
 	pthread_mutex_unlock(&data->print_mutex);
 }

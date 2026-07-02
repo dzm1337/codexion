@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:29:37 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 17:03:39 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/07/02 22:08:14 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,4 +100,15 @@ int	release_dongle(t_dongle *dongle, t_coder *coder)
 		pthread_cond_broadcast(&dongle->cond);
 	pthread_mutex_unlock(&dongle->mutex);
 	return (1);
+}
+
+void	grant_dongle(t_dongle *dongle, t_coder *coder, long now)
+{
+	if (coder->data->scheduler == MY_FIFO)
+		dequeue_coder(dongle);
+	else
+		heap_pop(dongle);
+	dongle->available = 0;
+	dongle->held_by = coder->id;
+	dongle->timestamp = now;
 }

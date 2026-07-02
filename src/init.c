@@ -6,7 +6,7 @@
 /*   By: dde-paul <dde-paul@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 00:28:14 by dde-paul          #+#    #+#             */
-/*   Updated: 2026/05/14 03:10:50 by dde-paul         ###   ########.fr       */
+/*   Updated: 2026/07/02 21:44:57 by dde-paul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static int	init_dongles_and_mutex(t_data *data)
 {
 	data->stop = 0;
 	data->start_time = get_current_time();
-	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
+	if (pthread_mutex_init(&data->print_mutex, NULL) != 0
+		|| pthread_mutex_init(&data->stop_mutex, NULL) != 0)
 		return (0);
 	if (data->scheduler == MY_FIFO)
 		data->dongles = init_dongles_fifo(data->number_of_coders);
@@ -36,14 +37,12 @@ static int	init_coders(t_data *data)
 
 	data->coders = malloc(sizeof(t_coder) * data->number_of_coders);
 	if (!data->coders)
-	{
-		free_dongles(data->dongles, data->number_of_coders);
-		pthread_mutex_destroy(&data->print_mutex);
 		return (0);
-	}
 	i = 0;
 	while (i < data->number_of_coders)
 	{
+		if (pthread_mutex_init(&data->coders[i].state_mutex, NULL) != 0)
+			return (0);
 		data->coders[i].id = i + 1;
 		data->coders[i].last_compile = data->start_time;
 		data->coders[i].compiles_done = 0;
